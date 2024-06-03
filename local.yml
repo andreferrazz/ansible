@@ -1,0 +1,23 @@
+- hosts: localhost
+  become: true
+  tasks:
+    - name: Install zsh
+      apt: name=zsh
+    - name: Change shell to zsh
+      shell: chsh -s $(which zsh)
+    - name: Install fontconfig
+      apt: name=fontconfig
+    - name: Create nerd fonts folder
+      shell: mkdir ~/.nerd-fonts 
+      become_user: andre
+    - name: Clone nerd fonts folder
+      shell: git clone --filter=blob:none --sparse https://github.com/ryanoasis/nerd-fonts.git ~/.nerd-fonts/ 
+      become_user: andre
+    - name: Sparse Checkout JetBrainsMono
+      shell: cd ~/.nerd-fonts && git sparse-checkout add patched-fonts/JetBrainsMono 
+      become_user: andre
+    - name: Install JetBrainsMono Nerd Font
+      shell: ~/.nerd-fonts/install.sh JetBrainsMono
+      become_user: andre
+    - name: Install Neovim
+      apt: name=neovim
