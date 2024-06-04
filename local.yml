@@ -1,10 +1,39 @@
 - hosts: localhost
   become: true
   tasks:
-    - name: Install zsh
-      apt: name=zsh
-    - name: Change shell to zsh
-      shell: chsh -s $(which zsh)
+    - name: Cloning .dotfiles
+      ansible.builtin.git:
+        repo: https://github.com/andreferrazz/.dotfiles.git
+        dest: /home/andre/.dotfiles
+        recursive: yes
+        update: yes
+        version: main
+      become_user: andre
+      tags:
+        - dotfiles
+    - name: Create .config
+      ansible.builtin.file:
+        path: ~/.config
+        state: directory
+      become_user: andre
+      tags:
+        - dotfiles
+    - name: Link .zshrc
+      ansible.builtin.file:
+        src: ~/.dotfiles/.zshrc
+        dest: ~/.zshrc
+        state: link
+      become_user: andre
+      tags:
+        - dotfiles
+    - name: Link nvim config
+      ansible.builtin.file:
+        src: ~/.dotfiles/.config/nvim
+        dest: ~/.config/nvim
+        state: link
+      become_user: andre
+      tags:
+        - dotfiles
     - name: Install fontconfig
       apt: name=fontconfig
     - name: Create nerd fonts folder
@@ -19,5 +48,15 @@
     - name: Install JetBrainsMono Nerd Font
       shell: ~/.nerd-fonts/install.sh JetBrainsMono
       become_user: andre
+    - name: Install zsh
+      apt: name=zsh
+    - name: Change shell to zsh
+      shell: chsh -s $(which zsh)
+    - name: Install starship
+      shell: curl -sS https://starship.rs/install.sh | sh -s -- --yes
+    - name: Config starship
+      shell: starship preset gruvbox-rainbow -o ~/.config/starship.toml
+      become_user: andre
     - name: Install Neovim
       apt: name=neovim
+

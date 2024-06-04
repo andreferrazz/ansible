@@ -1,0 +1,13 @@
+vim.g.clipboard = {
+    name = 'xclip',
+    copy = {
+        ['+'] = 'xclip -i clipboard',
+        ['*'] = 'xclip -i primary',
+    },
+    paste = {
+        ['+'] = 'xclip -selection clipboard -o',
+        ['*'] = 'xclip -selection primary -o',
+    },
+    cache_enabled = 0,
+}
+
