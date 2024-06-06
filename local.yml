@@ -50,8 +50,16 @@
       become_user: andre
     - name: Install zsh
       apt: name=zsh
+      tags:
+        - zsh
     - name: Change shell to zsh
-      shell: chsh -s $(which zsh)
+      lineinfile:
+        path: /etc/passwd
+        regexp: '^andre:(.*):/usr/bin/bash$'
+        line: 'andre:\1:/usr/bin/zsh'
+        backrefs: yes      
+      tags:
+        - zsh
     - name: Install starship
       shell: curl -sS https://starship.rs/install.sh | sh -s -- --yes
     - name: Config starship
@@ -59,4 +67,3 @@
       become_user: andre
     - name: Install Neovim
       apt: name=neovim
-
