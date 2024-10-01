@@ -34,6 +34,14 @@
       become_user: andre
       tags:
         - dotfiles
+    - name: Link alacrity config
+      ansible.builtin.file:
+        src: ~/.dotfiles/.config/alacritty
+        dest: ~/.config/alacritty
+        state: link
+      become_user: andre
+      tags:
+        - dotfiles
     - name: Install fontconfig
       apt: name=fontconfig
     - name: Create nerd fonts folder
@@ -53,11 +61,8 @@
       tags:
         - zsh
     - name: Change shell to zsh
-      lineinfile:
-        path: /etc/passwd
-        regexp: '^andre:(.*):/usr/bin/bash$'
-        line: 'andre:\1:/usr/bin/zsh'
-        backrefs: yes      
+      shell: chsh -s $(which zsh)
+      become_user: andre
       tags:
         - zsh
     - name: Install starship
