@@ -42,6 +42,14 @@
       become_user: andre
       tags:
         - dotfiles
+    - name: Link ssh config
+      ansible.builtin.file:
+        src: ~/.dotfiles/.ssh/config
+        dest: ~/.ssh/config
+        state: link
+      become_user: andre
+      tags:
+        - dotfiles
     - name: Install fontconfig
       apt: name=fontconfig
     - name: Create nerd fonts folder
