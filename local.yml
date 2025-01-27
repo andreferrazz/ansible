@@ -52,24 +52,34 @@
         - dotfiles
     - name: Install fontconfig
       apt: name=fontconfig
+      tags:
+        - nerdfont
     - name: Create nerd fonts folder
       shell: mkdir ~/.nerd-fonts 
       become_user: andre
+      tags:
+        - nerdfont
     - name: Clone nerd fonts folder
       shell: git clone --filter=blob:none --sparse https://github.com/ryanoasis/nerd-fonts.git ~/.nerd-fonts/ 
       become_user: andre
+      tags:
+        - nerdfont
     - name: Sparse Checkout JetBrainsMono
       shell: cd ~/.nerd-fonts && git sparse-checkout add patched-fonts/JetBrainsMono 
       become_user: andre
+      tags:
+        - nerdfont
     - name: Install JetBrainsMono Nerd Font
       shell: ~/.nerd-fonts/install.sh JetBrainsMono
       become_user: andre
+      tags:
+        - nerdfont
     - name: Install zsh
       apt: name=zsh
       tags:
         - zsh
     - name: Change shell to zsh
-      shell: chsh -s $(which zsh)
+      shell: sudo chsh -s $(which zsh)
       become_user: andre
       tags:
         - zsh
